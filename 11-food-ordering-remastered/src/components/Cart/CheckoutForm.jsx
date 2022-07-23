@@ -17,7 +17,7 @@ const CheckoutForm = (props) => {
   const postalCodeInputRef = useRef();
   const cityInputRef = useRef();
 
-  const confirmHandler = (event) => {
+  const confirmOrderHandler = (event) => {
     event.preventDefault();
 
     const clinetInfo = {
@@ -45,12 +45,11 @@ const CheckoutForm = (props) => {
     }
 
     // submiting data
-    console.log(clinetInfo);
-    props.onCancel();
+    props.onOrderSubmit(clinetInfo);
   };
 
   return (
-    <form className={classes.form} onSubmit={confirmHandler}>
+    <form className={classes.form} onSubmit={confirmOrderHandler}>
       <div
         className={`${classes.control} ${
           !inputValidity.name && classes.invalid
