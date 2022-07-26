@@ -11,6 +11,8 @@ html {
 body {
   margin: 0;
   background-color: #3f3f3f;
+
+  padding-bottom: 7rem;
 }
 
 button {
