@@ -1,12 +1,12 @@
 import { useRef, useState } from 'react';
-import { Prompt } from 'react-router-dom';
 
 import Card from '../UI/Card';
 import LoadingSpinner from '../UI/LoadingSpinner';
 import classes from './QuoteForm.module.css';
 
 const QuoteForm = (props) => {
-  const [isFocused, setIsFocused] = useState(false);
+  // const [isFocused, setIsFocused] = useState(false);
+  const [, setIsFocused] = useState(false);
 
   const authorInputRef = useRef();
   const textInputRef = useRef();
@@ -28,10 +28,6 @@ const QuoteForm = (props) => {
 
   return (
     <>
-      <Prompt
-        when={isFocused}
-        message={(location) => 'Are you sure you want to leave?'}
-      />
       <Card>
         <form
           onFocus={formFocusHandler}
