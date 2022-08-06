@@ -1,38 +1,9 @@
+import { MongoClient } from 'mongodb';
 import MeetupList from '../components/meetups/MeetupList';
-// import { useEffect, useState } from 'react';
 
-const DUMMY_MEETUPS = [
-  {
-    id: 'm1',
-    title: 'A First Meetup',
-    image: 'https://picsum.photos/1920/1080',
-    address: 'Some address 5, 12345 Some City',
-    description: 'This is a first meetup',
-  },
+import { MONGODB_URI } from './api/api-config';
 
-  {
-    id: 'm2',
-    title: 'A Second Meetup',
-    image: 'https://picsum.photos/1921/1081',
-    address: 'Some address 8, 123 Some City',
-    description: 'This is a second meetup',
-  },
-
-  // {
-  //   id: 'm3',
-  //   title: 'A 3rd Meetup',
-  //   image: 'https://picsum.photos/1919/1079',
-  //   address: 'Some address 2, 123 Some City',
-  //   description: 'This is a 3rd meetup',
-  // },
-  // {
-  //   id: 'm4',
-  //   title: 'A 4th Meetup',
-  //   image: 'https://picsum.photos/1920/1079',
-  //   address: 'Some address 2, 123 Some City',
-  //   description: 'This is a 4th meetup',
-  // },
-];
+import Head from 'next/head';
 
 function HomePage(props) {
   // const [loadedMeetups, setLoadedMeetups] = useState([]);
@@ -40,13 +11,37 @@ function HomePage(props) {
   //   setLoadedMeetups(DUMMY_MEETUPS);
   // }, []);
 
-  return <MeetupList meetups={props.meetups} />;
+  return (
+    <>
+      <Head>
+        <title>React Meetups</title>
+        <meta name="description" content="Another dummy web app" />
+      </Head>
+      <MeetupList meetups={props.meetups} />
+    </>
+  );
 }
 
-export function getStaticProps() {
+export async function getStaticProps() {
   // get meetings data
+  const client = await MongoClient.connect(MONGODB_URI);
+
+  const db = client.db();
+  const meetupsCollection = db.collection('meetups');
+
+  const meetupsData = await meetupsCollection.find().toArray();
+
+  client.close();
+
   return {
-    props: { meetups: DUMMY_MEETUPS },
+    props: {
+      meetups: meetupsData.map((meetup) => {
+        meetup.id = meetup._id.toString();
+        delete meetup._id;
+
+        return meetup;
+      }),
+    },
     revalidate: 10,
   };
 }

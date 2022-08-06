@@ -1,29 +1,65 @@
+import { MongoClient, ObjectId } from 'mongodb';
+import { MONGODB_URI } from '../api/api-config';
+
+import Head from 'next/head';
+
 import MeetupDetails from '../../components/meetups/MeetupDetails';
 
 const MeetupInfo = (props) => {
-  return <MeetupDetails {...props.meetupData} />;
+  return (
+    <>
+      <Head>
+        <title>{props.meetupData.title}</title>
+        <meta name="description" content={props.meetupData.description} />
+      </Head>
+      <MeetupDetails {...props.meetupData} />
+    </>
+  );
 };
 
 //////////////////////////////////
-export function getStaticPaths() {
+export async function getStaticPaths() {
+  const client = await MongoClient.connect(MONGODB_URI);
+
+  const db = client.db();
+  const meetupsCollection = db.collection('meetups');
+
+  const meetupsData = await meetupsCollection.find({}, { _id: 1 }).toArray();
+
+  client.close();
+
   return {
-    fallback: false,
-    paths: [{ params: { meetupId: 'm1' } }, { params: { meetupId: 'm2' } }],
+    fallback: 'blocking',
+    paths: meetupsData.map((meetup) => ({
+      params: {
+        meetupId: meetup._id.toString(),
+      },
+    })),
   };
 }
 
-export function getStaticProps(context) {
+export async function getStaticProps(context) {
   const meetupId = context.params.meetupId;
+
+  const client = await MongoClient.connect(MONGODB_URI);
+
+  const db = client.db();
+  const meetupsCollection = db.collection('meetups');
+
+  const selectedMeetup = await meetupsCollection.findOne({
+    _id: ObjectId(meetupId),
+  });
+
+  // modify response object
+  selectedMeetup.id = meetupId;
+  delete selectedMeetup._id;
+  //
+
+  client.close();
 
   return {
     props: {
-      meetupData: {
-        id: meetupId,
-        image: 'https://picsum.photos/1920/1080',
-        title: 'Firts meetup',
-        address: 'Some Street 5, Some City',
-        description: 'This is a first meetup!!',
-      },
+      meetupData: selectedMeetup,
     },
   };
 }

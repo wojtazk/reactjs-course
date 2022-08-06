@@ -1,8 +1,8 @@
 .details {
+  display: block;
   text-align: center;
-  overflow: hidden;
 }
 
 .details img {
-  width: 120%;
+  width: 100%;
 }
