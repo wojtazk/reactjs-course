@@ -32,4 +32,18 @@ course2 = 123456;
 type Person = { name: string; age: number };
 
 let human: Person;
-let manking: Person[];
+
+// NOTE: functions & function types
+function add(a: number, b: number): number {
+  return a + b;
+}
+
+function print_1234(value: any) {
+  console.log(value);
+}
+
+// NOTE: generics
+function insertAtBeginnig<T>(array: T[], value: T) {
+  const newArray = [value, ...array];
+  return newArray;
+}
