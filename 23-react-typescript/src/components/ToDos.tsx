@@ -1,12 +1,12 @@
 import React from 'react';
+import { Todo } from '../models/todo';
+import ToDoItem from './ToDoItem';
 
-const ToDos: React.FC<{ items: string[]; children?: JSX.Element }> = (
-  props
-) => {
+const ToDos: React.FC<{ items: Todo[]; children?: JSX.Element }> = (props) => {
   return (
     <ul>
-      {props.items.map((item) => (
-        <li key={item}>{item}</li>
+      {props.items.map((item: Todo) => (
+        <ToDoItem {...item} />
       ))}
     </ul>
   );

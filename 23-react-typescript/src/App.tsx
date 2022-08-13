@@ -1,10 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
+import NewToDo from './components/NewToDo';
+
 import ToDos from './components/ToDos';
+import { Todo } from './models/todo';
 
 function App() {
+  const [todos, setTodos] = useState([
+    new Todo('steal a baby'),
+    new Todo('Drive under influence'),
+    new Todo('Kill someone famous'),
+  ]);
+
+  const addItemHandler = (text: string) => {
+    setTodos((prevState) => [...prevState, new Todo(text)]);
+  };
+
   return (
     <div>
-      <ToDos items={['steal a baby', 'Drive under influence']} />
+      <NewToDo onAddItem={addItemHandler} />
+      <ToDos items={todos} />
     </div>
   );
 }
