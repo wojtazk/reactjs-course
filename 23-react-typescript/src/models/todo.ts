@@ -3,7 +3,7 @@ export class Todo {
   text: string;
 
   constructor(todoText: string) {
-    this.id = new Date().toISOString();
+    this.id = new Date().toISOString() + Math.random();
     this.text = todoText;
   }
 }
